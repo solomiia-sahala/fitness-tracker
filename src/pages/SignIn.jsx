@@ -1,18 +1,32 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Checkbox, CssBaseline, FormControlLabel, TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar/Avatar';
-import Typography from '@mui/material/Typography/Typography';
-import Box from '@mui/material/Box/Box';
-import Button from '@mui/material/Button/Button';
-import Grid from '@mui/material/Grid/Grid';
-import Link from '@mui/material/Link/Link';
-import Container from '@mui/material/Container/Container';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Container from '@mui/material/Container';
 import Copyright from '../components/Copyright';
+import { useState } from 'react';
+
+const userInitialData = { id: null, email: '', password: '', error: null, auth: null };
 
 const SignIn = () => {
-  const handleSubmit = () => {
-//todo implement firebase logic for sign in
+  const [user, setUser] = useState(userInitialData)
+
+  const isValid = () => !!user.email && !!user.password;
+
+  const handleChange = (event) => {
+    const {name, value} = event.target;
+    setUser(prev=> ({...prev, [name]: value}));
   }
+
+  const handleSubmit = (event) => {
+   // todo firebase auth
+  };
+
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline/>
@@ -30,7 +44,7 @@ const SignIn = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={ handleSubmit } noValidate sx={ { mt: 1 } }>
+        <Box component="form" onSubmit={ (e) => e.preventDefault() } noValidate sx={ { mt: 1 } }>
           <TextField
             margin="normal"
             required
@@ -40,6 +54,7 @@ const SignIn = () => {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={handleChange}
           />
           <TextField
             margin="normal"
@@ -50,6 +65,7 @@ const SignIn = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handleChange}
           />
           <FormControlLabel
             control={ <Checkbox value="remember" color="primary"/> }
@@ -58,8 +74,11 @@ const SignIn = () => {
           <Button
             type="submit"
             fullWidth
+            // disabled={ isValid }
             variant="contained"
             sx={ { mt: 3, mb: 2 } }
+            disabled={!isValid()}
+            onClick={ handleSubmit }
           >
             Sign In
           </Button>
