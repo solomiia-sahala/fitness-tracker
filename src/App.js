@@ -2,8 +2,9 @@ import './App.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import Error from './components/Error';
 import SignIn from './pages/SignIn';
-import theme from './config/themeConfig';
+import theme from './config/theme.config';
 import { ThemeProvider } from '@mui/material/styles';
+import SignUp from './pages/SignUp';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/" element={ <SignIn/> }/>
-        <Route path="/sign-up" element={ 'Signup' }/>
+        <Route path="/sign-up" element={ <SignUp/> }/>
         <Route path="/dashboard" element={ 'Dashboard' }/>
         <Route path='*' element={ <Error/> }/>
       </Routes>

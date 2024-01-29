@@ -1,19 +1,22 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Checkbox, CssBaseline, FormControlLabel, TextField } from '@mui/material';
+import { CssBaseline, TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Copyright from '../components/Copyright';
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { withFirebase } from '../components/hocComponents/withFirebase';
+import PasswordReset from '../components/PasswordReset';
 
 const userInitialData = { id: null, email: '', password: '', error: null, auth: null };
 
-const SignIn = () => {
-  const [user, setUser] = useState(userInitialData)
+const SignIn = (props) => {
+  const [user, setUser] = useState(userInitialData);
+  const navigate = useNavigate();
 
   const isValid = () => !!user.email && !!user.password;
 
@@ -22,10 +25,17 @@ const SignIn = () => {
     setUser(prev=> ({...prev, [name]: value}));
   }
 
-  const handleSubmit = (event) => {
-   // todo firebase auth
-  };
-
+  const handleSubmit = () => {
+    props.firebase.signInWithEmailAndPassword(user.email, user.password)
+      .then(() => {
+        setUser(userInitialData)
+        navigate("/dashboard");
+      })
+      .catch(error => {
+        setUser({ ...user, error: error.message })
+        console.error(error.message)
+      });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -67,14 +77,12 @@ const SignIn = () => {
             autoComplete="current-password"
             onChange={handleChange}
           />
-          <FormControlLabel
-            control={ <Checkbox value="remember" color="primary"/> }
-            label="Remember me"
-          />
+          <Typography>
+            {user.error && user.error}
+          </Typography>
           <Button
             type="submit"
             fullWidth
-            // disabled={ isValid }
             variant="contained"
             sx={ { mt: 3, mb: 2 } }
             disabled={!isValid()}
@@ -84,12 +92,10 @@ const SignIn = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+              <PasswordReset/>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to="/sign-up" variant="body2">
                 { "Don't have an account? Sign Up" }
               </Link>
             </Grid>
@@ -100,4 +106,4 @@ const SignIn = () => {
     </Container>
   )
 };
-export default SignIn;
+export default withFirebase(SignIn);
