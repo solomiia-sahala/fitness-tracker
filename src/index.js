@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import App from './App';
 import Firebase from './services/firebase.service';
-import FirebaseContext from './components/hocComponents/withFirebase';
+import FirebaseContext from './contexts/firebaseContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
