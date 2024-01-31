@@ -23,7 +23,7 @@ export default class Firebase {
   }
 
   signOut() {
-    signOut();
+    return signOut(this.auth);
   }
 
   resetPassword(email) {
