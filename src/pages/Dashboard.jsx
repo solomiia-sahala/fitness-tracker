@@ -15,12 +15,13 @@ import Copyright from '../components/Copyright';
 import { useState } from 'react';
 import { AppBar } from '../components/AppBar';
 import { Drawer } from '../components/Drawer';
-import { NavigationList } from '../constants/navigation-list.const';
+import { navigationList } from '../constants/navigationList.const';
 import ListItem from '../components/ListItem';
 import { Link, useNavigate, useResolvedPath } from 'react-router-dom';
 import { withAuthentication } from '../components/hocComponents/withAuthentication';
 import AuthenticationContext from '../contexts/authContext';
 import NotAuthorized from '../components/NotAuthorized';
+import CreateActivity from '../components/CreateActivity';
 
 function Dashboard(props) {
   const [open, setOpen] = useState(true);
@@ -36,6 +37,10 @@ function Dashboard(props) {
       .catch(error => {
         console.error(error.message)
       });
+  }
+
+  const handleSubmit = (data)=> {
+    console.log(data)
   }
 
   return (
@@ -86,7 +91,7 @@ function Dashboard(props) {
             </Toolbar>
             <Divider/>
             <List component="nav">
-              { NavigationList.map((item, i) => {
+              { navigationList.map((item, i) => {
                 if (item.text === 'Logout') {
                   return <ListItem key={ i } { ...item } callback={ signOut }/>
                 }
@@ -113,31 +118,31 @@ function Dashboard(props) {
           >
             <Toolbar/>
             <Container maxWidth="lg" sx={ { mt: 4, mb: 4 } }>
-              <Grid container spacing={ 3 }>
-                {/* Chart */ }
-                <Grid item xs={ 12 } md={ 8 } lg={ 9 }>
+              <Grid container spacing={ 4 }>
+                <Grid item xs={ 12 } md={ 6 } lg={ 4 }>
                   <Paper
                     sx={ {
                       p: 2,
                       display: 'flex',
                       flexDirection: 'column',
-                      height: 240,
+                      height: 340,
+                      width: '100%'
                     } }
                   >
-                    {/*<Chart />*/ }
+                    {/*<Calendar user={user} firebase={props.firebase}/>*/}
                   </Paper>
                 </Grid>
-                {/* Recent Deposits */ }
-                <Grid item xs={ 12 } md={ 4 } lg={ 3 }>
+                <Grid item xs={ 12 } md={ 6 } lg={ 8 }>
                   <Paper
                     sx={ {
                       p: 2,
                       display: 'flex',
                       flexDirection: 'column',
-                      height: 240,
+                      height: 390,
+                      width: '100%'
                     } }
                   >
-                    {/*<Deposits />*/ }
+                    <CreateActivity handleSubmit={handleSubmit}/>
                   </Paper>
                 </Grid>
                 {/* Recent Orders */ }

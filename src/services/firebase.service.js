@@ -1,17 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { getAuth,
+import {
+  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
-  signOut } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+  signOut
+} from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import { firebaseConfig } from '../config/firebase.config'
 
 export default class Firebase {
   constructor() {
     this.app = initializeApp(firebaseConfig);
     this.auth = getAuth(this.app);
-    this.db = getFirestore();
+    this.db = getDatabase(this.app);
   }
 
   createUserWithEmailAndPassword(email, password) {
@@ -28,5 +30,9 @@ export default class Firebase {
 
   resetPassword(email) {
     return sendPasswordResetEmail(this.auth, email);
+  }
+
+  saveUserData(uid, userData) {
+    set(ref(this.db, 'users/' + uid), userData);
   }
 }

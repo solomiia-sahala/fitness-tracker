@@ -31,7 +31,15 @@ const SignUp = (props) => {
   }
   const handleSubmit = () => {
     props.firebase.createUserWithEmailAndPassword(user.email, user.password)
-      // Later add user also to database
+      .then(authUser => {
+        return props.firebase
+          .saveUserData(authUser.user.uid, {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            activities: null
+          })
+      })
       .then(() => {
         setUser(userInitialData);
         navigate("/dashboard");
