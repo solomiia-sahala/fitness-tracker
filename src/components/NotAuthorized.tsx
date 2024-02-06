@@ -13,7 +13,7 @@ const NotAuthorized = () => {
           alignItems: 'center',
         } }
       >
-        User is not authorized. Please,<Link to="/" variant="body2">
+        User is not authorized. Please,<Link to="/">
         log in
       </Link>
       </Box>

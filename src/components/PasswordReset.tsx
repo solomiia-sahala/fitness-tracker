@@ -11,43 +11,44 @@ import {
   Link
 } from '@mui/material';
 import { useState } from 'react';
+import React from 'react';
 
-function PasswordReset(props) {
-  const [open, setOpen] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [state, setState] = useState({email: '', error: null})
+function PasswordReset(props: any) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [state, setState] = useState<{ email: string, error: string | null }>({ email: '', error: null })
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (): void => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
-    setState({email: '', error: null})
+    setState({ email: '', error: null })
   };
 
-  const handleChange = e => {
-    const {name, value} = e.target;
-    setState({...state, [name]: value});
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target;
+    setState({ ...state, [name]: value });
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     props.firebase.resetPassword(state.email)
       .then(() => {
-        setState({email: '', error: null });
+        setState({ email: '', error: null });
         handleClose();
         setOpenAlert(true);
       })
-      .catch(error => {
-        setState({ error });
+      .catch((error: Error) => {
+        setState((prev) => ({ ...prev, error: error.message }));
       });
   };
 
-  const isInvalid = !state.email;
+  const isInvalid: boolean = !state.email;
 
   return (
     <>
-      <Link to="" onClick={handleClickOpen}>
+      <Link onClick={handleClickOpen}>
         Forgot password?
       </Link>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -67,7 +68,7 @@ function PasswordReset(props) {
             onChange={handleChange}
             fullWidth
           />
-          {state.error && <p style={{color:'red'}}>{state.error.message}</p>}
+          {state.error && <p style={{ color: 'red' }}>{state.error}</p>}
 
         </DialogContent>
         <DialogActions>
@@ -93,4 +94,4 @@ function PasswordReset(props) {
   )
 }
 
-export default withFirebase(PasswordReset);
+export default withFirebase(PasswordReset as unknown as typeof React.Component);

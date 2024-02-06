@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { CssBaseline, TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -7,12 +8,22 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Copyright from '../components/Copyright';
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { withFirebase } from '../components/hocComponents/withFirebase';
 import red from '@mui/material/colors/red';
+import { UserCredential } from 'firebase/auth';
 
-const userInitialData = {
+interface UserSignUp {
+  id: null | number;
+  email: string;
+  password: string,
+  firstName: string,
+  lastName: string,
+  error: null | string,
+  auth: any
+}
+
+const userInitialData: UserSignUp = {
   id: null,
   email: '',
   password: '',
@@ -21,17 +32,19 @@ const userInitialData = {
   error: null,
   auth: null
 };
-const SignUp = (props) => {
-  const [user, setUser] = useState(userInitialData)
+
+const SignUp = (props: any) => {
+  const [user, setUser] = useState<UserSignUp>(userInitialData)
   const navigate = useNavigate();
-  const isValid = () => !!user.email && !!user.password && !!user.firstName && !!user.lastName;
-  const handleChange = (event) => {
+  const isValid = (): boolean => !!user.email && !!user.password && !!user.firstName && !!user.lastName;
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
-    setUser(prev => ({ ...prev, [name]: value }));
+    setUser((prev: UserSignUp) => ({ ...prev, [name]: value }));
   }
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     props.firebase.createUserWithEmailAndPassword(user.email, user.password)
-      .then(authUser => {
+      .then((authUser: UserCredential) => {
         return props.firebase
           .saveUserData(authUser.user.uid, {
             firstName: user.firstName,
@@ -44,7 +57,7 @@ const SignUp = (props) => {
         setUser(userInitialData);
         navigate("/dashboard");
       })
-      .catch(error => {
+      .catch((error: Error) => {
         setUser({ ...user, error: error.message })
         console.error(error.message)
       });
@@ -53,22 +66,22 @@ const SignUp = (props) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline/>
       <Box
-        sx={ {
+        sx={{
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-        } }
+        }}
       >
-        <Avatar sx={ { m: 1, bgcolor: 'secondary.main' } }>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" onSubmit={ (e) => e.preventDefault() } noValidate sx={ { mt: 3 } }>
-          <Grid container spacing={ 2 }>
-            <Grid item xs={ 12 } sm={ 6 }>
+        <Box component="form" onSubmit={(e: React.SyntheticEvent) => e.preventDefault()} noValidate sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="given-name"
                 name="firstName"
@@ -77,10 +90,10 @@ const SignUp = (props) => {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                onChange={ handleChange }
+                onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={ 12 } sm={ 6 }>
+            <Grid item xs={12} sm={6}>
               <TextField
                 required
                 fullWidth
@@ -88,10 +101,10 @@ const SignUp = (props) => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="family-name"
-                onChange={ handleChange }
+                onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={ 12 }>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -99,10 +112,10 @@ const SignUp = (props) => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={ handleChange }
+                onChange={handleChange}
               />
             </Grid>
-            <Grid item xs={ 12 }>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -111,38 +124,38 @@ const SignUp = (props) => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                onChange={ handleChange }
+                onChange={handleChange}
               />
             </Grid>
           </Grid>
           <Typography
-            sx={ {
+            sx={{
               color: red
-            } }
+            }}
           >
-            { user.error && user.error }
+            {user.error && user.error}
           </Typography>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={ { mt: 3, mb: 2 } }
-            disabled={ !isValid() }
-            onClick={ handleSubmit }
+            sx={{ mt: 3, mb: 2 }}
+            disabled={!isValid()}
+            onClick={handleSubmit}
           >
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link to="/" variant="body2">
+              <Link to="/">
                 Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={ { mt: 8, mb: 4 } }/>
+      <Copyright sx={{ mt: 8, mb: 4 }}/>
     </Container>
   )
 };
-export default withFirebase(SignUp);
+export default withFirebase(SignUp as unknown as typeof React.Component);

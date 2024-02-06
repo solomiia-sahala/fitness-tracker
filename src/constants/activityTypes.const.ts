@@ -1,4 +1,6 @@
-export const activityType = [
+import { Option } from '../interfaces/option.interface';
+
+export const activityType: Option[] = [
   { label: "Swimming", icon: "🏊‍♂" },
   { label: "Football", icon: "⚽" },
   { label: "Running", icon: "🏃‍♂" },

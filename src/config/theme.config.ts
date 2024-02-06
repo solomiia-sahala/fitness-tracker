@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles/createTheme';
 
-const theme = createTheme({
+const theme: Theme = createTheme({
   typography: {
     fontFamily: 'Dosis',
   },

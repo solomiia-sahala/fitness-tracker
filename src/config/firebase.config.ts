@@ -1,4 +1,4 @@
-export const firebaseConfig = {
+export const firebaseConfig: any = {
   apiKey: "AIzaSyBjaE4xWzcUgxC2spNcAOZ5UviT2lm34v4",
   authDomain: "fitness-tracker-c4612.firebaseapp.com",
   projectId: "fitness-tracker-c4612",
