@@ -7,13 +7,12 @@ import { navigationItem } from '../interfaces/navigationItem.interface';
 import { NavigationTabs } from '../enums/navigationTabs.enum';
 
 const Sidebar = (props: {
-  open: boolean,
   toggleDrawer: () => void,
   signOut: () => void,
 }) => {
   const url = useResolvedPath("").pathname;
   return (
-    <Drawer variant="permanent" open={props.open}>
+    <>
       <Toolbar
         sx={{
           display: 'flex',
@@ -39,7 +38,7 @@ const Sidebar = (props: {
           )
         })}
       </List>
-    </Drawer>
+    </>
   )
 };
 

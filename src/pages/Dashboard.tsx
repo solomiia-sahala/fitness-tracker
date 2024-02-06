@@ -26,6 +26,7 @@ import React from 'react';
 import { Activity } from '../interfaces/activity.interface';
 import { navigationItem } from '../interfaces/navigationItem.interface';
 import { NavigationTabs } from '../enums/navigationTabs.enum';
+import Sidebar from '../components/Sidebar';
 
 function Dashboard(props: any) {
   const [open, setOpen] = useState<boolean>(true);
@@ -82,32 +83,7 @@ function Dashboard(props: any) {
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon/>
-            </IconButton>
-          </Toolbar>
-          <Divider/>
-          <List component="nav">
-            {navigationList.map((item: navigationItem, i: number) => {
-              if (item.tabName === NavigationTabs.Logout) {
-                return <ListItem key={i} {...item} callback={signOut}/>
-              }
-              return (
-                <Link to={`${url}${item.path}`} key={i}
-                      style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <ListItem {...item}/>
-                </Link>
-              )
-            })}
-          </List>
+          <Sidebar toggleDrawer={toggleDrawer} signOut={signOut}/>
         </Drawer>
         <Box
           component="main"
