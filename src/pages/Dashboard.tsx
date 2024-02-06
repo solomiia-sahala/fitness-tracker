@@ -27,6 +27,7 @@ import { Activity } from '../interfaces/activity.interface';
 import { navigationItem } from '../interfaces/navigationItem.interface';
 import { NavigationTabs } from '../enums/navigationTabs.enum';
 import Sidebar from '../components/Sidebar';
+import SnackBar from '../components/SnackBar';
 
 function Dashboard(props: any) {
   const [open, setOpen] = useState<boolean>(true);
@@ -42,10 +43,6 @@ function Dashboard(props: any) {
       .catch((error: Error) => {
         console.error(error.message)
       });
-  }
-
-  const handleSubmit = (data: Activity): void => {
-    console.log(data)
   }
 
   return (
@@ -123,7 +120,7 @@ function Dashboard(props: any) {
                     width: '100%'
                   }}
                 >
-                  <CreateActivity handleSubmit={handleSubmit}/>
+                  <CreateActivity userId={user.uid} firebase={props.firebase}/>
                 </Paper>
               </Grid>
               {/* Recent Orders */}

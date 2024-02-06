@@ -5,13 +5,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Snackbar,
   TextField,
   Button,
   Link
 } from '@mui/material';
 import { useState } from 'react';
 import React from 'react';
+import SnackBar from './SnackBar';
 
 function PasswordReset(props: any) {
   const [open, setOpen] = useState<boolean>(false);
@@ -38,6 +38,9 @@ function PasswordReset(props: any) {
         setState({ email: '', error: null });
         handleClose();
         setOpenAlert(true);
+        setTimeout(() => {
+          setOpenAlert(false);
+        }, 3000)
       })
       .catch((error: Error) => {
         setState((prev) => ({ ...prev, error: error.message }));
@@ -81,15 +84,7 @@ function PasswordReset(props: any) {
         </DialogActions>
       </Dialog>
 
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        open={openAlert}
-        autoHideDuration={6000}
-        message="Password reset link successfully sent"
-      />
+      <SnackBar isOpen={openAlert} message={"Password reset link successfully sent"}/>
     </>
   )
 }

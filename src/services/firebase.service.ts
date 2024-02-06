@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 import { firebaseConfig } from '../config/firebase.config'
-import { Database } from '@firebase/database';
+import { Database, child, push, update } from '@firebase/database';
 import { Auth, UserCredential } from '@firebase/auth';
 import { Activity } from '../interfaces/activity.interface';
 
@@ -39,7 +39,15 @@ export default class Firebase {
     return sendPasswordResetEmail(this.auth, email);
   }
 
-  saveUserData(uid: string, userData: Activity): void {
+  saveUserData(uid: string, userData: { firstName: string, lastName: string, email: string }): void {
     set(ref(this.db, 'users/' + uid), userData);
+  }
+
+  addActivity(uid: string, activity: Activity): Promise<void> {
+    const newPostKey = push(child(ref(this.db), `users/${uid}/activities`)).key;
+    const updates: any = {};
+    updates[`users/${uid}/activities` + '/' + newPostKey] = activity;
+
+    return update(ref(this.db), updates);
   }
 }
