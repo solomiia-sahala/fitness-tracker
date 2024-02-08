@@ -28,6 +28,7 @@ import { navigationItem } from '../interfaces/navigationItem.interface';
 import { NavigationTabs } from '../enums/navigationTabs.enum';
 import Sidebar from '../components/Sidebar';
 import SnackBar from '../components/SnackBar';
+import ActivityList from '../components/ActivityList';
 
 function Dashboard(props: any) {
   const [open, setOpen] = useState<boolean>(true);
@@ -123,14 +124,12 @@ function Dashboard(props: any) {
                   <CreateActivity userId={user.uid} firebase={props.firebase}/>
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  {/*<Orders />*/}
+                  <ActivityList userId={user.uid} firebase={props.firebase}/>
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }}/>
           </Container>
         </Box>
       </Box>) : <NotAuthorized/>
@@ -139,4 +138,4 @@ function Dashboard(props: any) {
   );
 }
 
-export default withAuthentication(Dashboard as unknown as typeof React.Component);
+export default withAuthentication(Dashboard as any); //todo set type

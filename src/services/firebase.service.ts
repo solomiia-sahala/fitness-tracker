@@ -6,9 +6,9 @@ import {
   sendPasswordResetEmail,
   signOut
 } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, get, child, push, update, remove, onValue, Unsubscribe } from "firebase/database";
 import { firebaseConfig } from '../config/firebase.config'
-import { Database, child, push, update } from '@firebase/database';
+import { Database } from '@firebase/database';
 import { Auth, UserCredential } from '@firebase/auth';
 import { Activity } from '../interfaces/activity.interface';
 
@@ -49,5 +49,41 @@ export default class Firebase {
     updates[`users/${uid}/activities` + '/' + newPostKey] = activity;
 
     return update(ref(this.db), updates);
+  }
+
+  updateActivity(uid: string, activity: Activity | null, activityKey: string): Promise<void> {
+    const updates: any = {};
+    updates[`users/${uid}/activities` + '/' + activityKey] = activity;
+
+    return update(ref(this.db), updates);
+  }
+
+
+  //fetch data only once
+  fetchActivitiesByUid(uid: string): Promise<any> {
+    const dbRef = ref(this.db);
+    const activities = get(child(dbRef, `users/${uid}/activities`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val()
+      } else {
+        return [];
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    return activities;
+  }
+
+  //create subscription on change for activitiesRef
+  fetchActivitiesByUid$(uid: string, updateData: Function): Unsubscribe {
+    const dbRef = ref(this.db);
+
+    const activitiesRef = ref(this.db, `users/${uid}/activities`);
+    const unsubscribe = onValue(activitiesRef, (snapshot) => {
+      const data = snapshot.val();
+      updateData(data);
+    });
+    return unsubscribe
   }
 }
